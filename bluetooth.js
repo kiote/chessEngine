@@ -38,7 +38,9 @@ function explore(peripheral) {
             characteristics.forEach(function(characteristic) {
               console.log('found characteristic:', characteristic.uuid);
               characteristic.subscribe(function(){
-                characteristic.read(function(error, data){
+                console.log("subscribed: ");
+                characteristic.on('data', function(data, isNotification){
+                  console.log("Data is: ");
                   console.log(data);
                 });
               });
