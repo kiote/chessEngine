@@ -4,7 +4,7 @@ var querystring = require('querystring');
 
 const DEVICE_NAME = 'MLT-BT05';
 const SERVICE_UUID = 'ffe0';
-const SERVER_URL = 'localhost';
+const SERVER_URL = process.env.SERVER_URL;
 const SERVER_PORT = 3000;
 const DATA_PATH = 'move';
 
