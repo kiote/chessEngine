@@ -32,22 +32,34 @@ function explore(peripheral) {
     console.log("connected...");
     peripheral.discoverServices([], function(err, services) {
       services.forEach(function(service) {
-        console.log('found service:', service.uuid);
-        if (service.uuid === SERVICE_UUID) {
-          service.discoverCharacteristics([], function(err, characteristics) {
-            characteristics.forEach(function(characteristic) {
-              console.log('found characteristic:', characteristic.uuid);
-              characteristic.subscribe(function(){
-                console.log("subscribed: ");
-                characteristic.on('data', function(data, isNotification){
-                  console.log("Data is: ");
-                  console.log(data);
-                });
-              });
-            });
-	        });
-        }
+        handleService(service)
       });
+    });
+  });
+}
+
+function handleService(service) {
+  console.log('found service:', service.uuid);
+  if (service.uuid === SERVICE_UUID) {
+    discoverCharacreistics(service);
+  }
+}
+
+function discoverCharacreistics(service) {
+  service.discoverCharacteristics([], function(err, characteristics) {
+    characteristics.forEach(function(characteristic){
+      handleCharacteristic(characteristic)
+    });
+  });
+}
+
+function handleCharacteristic(characteristic) {  
+  console.log('found characteristic:', characteristic.uuid);
+  characteristic.subscribe(function(){
+    console.log("subscribed: ");
+    characteristic.on('data', function(data, isNotification){
+      console.log("Data is: ");
+      console.log(data);
     });
   });
 }
