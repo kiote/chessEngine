@@ -94,14 +94,18 @@ function pushToServer(data) {
       }
   };
 
-  // Set up the request
-  var post_req = http.request(post_options, function(res) {
-      res.setEncoding('utf8');
-      res.on('data', function (chunk) {
-          console.log('Response: ' + chunk);
-      });
+  // Return new promise 
+  return new Promise(function(resolve, reject) {
+   // Do async job
+   // Set up the request
+    var post_req = http.request(post_options, function(res) {
+        res.setEncoding('utf8');
+        res.on('data', function (chunk) {
+            resolve('Response: ' + chunk);
+        });
+    });
+    // post the data
+    post_req.write(JSON.stringify(structure));
+    post_req.end();
   });
-  // post the data
-  post_req.write(JSON.stringify(structure));
-  post_req.end();
 }
