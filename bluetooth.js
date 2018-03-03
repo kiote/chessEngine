@@ -1,4 +1,8 @@
 var noble = require('noble');
+
+const DEVICE_NAME = 'MLT-BT05';
+const SERVICE_UUID = 'ffe0';
+
 console.log('scanning...');
 
 noble.on('stateChange', function(state) {
@@ -10,17 +14,7 @@ noble.on('stateChange', function(state) {
 });
 
 noble.on('discover', function(peripheral) {
-  console.log('\thello my local name is:');
-  console.log('\t\t' + peripheral.advertisement.localName);
-  console.log('\tcan I interest you in any of the following advertised services:');
-  console.log('\t\t' + JSON.stringify(peripheral.advertisement.serviceUuids));
-
-  if (peripheral.advertisement.manufacturerData) {
-    console.log('\there is my manufacturer data:');
-    console.log('\t\t' + JSON.stringify(peripheral.advertisement.manufacturerData.toString('hex')));
-  }
-
-  if (peripheral.advertisement.localName === 'MLT-BT05') {
+  if (peripheral.advertisement.localName === DEVICE_NAME) {
     noble.stopScanning();
     explore(peripheral);
   }
@@ -39,6 +33,18 @@ function explore(peripheral) {
     peripheral.discoverServices([], function(err, services) {
       services.forEach(function(service) {
         console.log('found service:', service.uuid);
+        if (service.uuid === SERVICE_UUID) {
+          service.discoverCharacteristics([], function(err, characteristics) {
+            characteristics.forEach(function(characteristic) {
+              console.log('found characteristic:', characteristic.uuid);
+              characteristic.subscribe(function(){
+                characteristic.read(function(error, data){
+                  console.log(data);
+                });
+              });
+            });
+	        });
+        }
       });
     });
   });
