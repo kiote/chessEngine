@@ -1,6 +1,5 @@
 var noble = require('noble');
 var http = require('http');
-var querystring = require('querystring');
 
 const DEVICE_NAME = 'MLT-BT05';
 const SERVICE_UUID = 'ffe0';
